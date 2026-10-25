@@ -1,0 +1,6 @@
+{
+  "name": "نظام التقويم المدرسي - التوجيه الطلابي",
+  "description": "منصة رقمية تفاعلية حديثة لإدارة مؤشرات وبرامج التقويم المدرسي ومتابعة إنجاز التوجيه الطلابي، مع لوحة تحكم تحليلية ورسوم بيانية ذكية.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
