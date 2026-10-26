@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Shield, Bell, Printer, LogIn, LogOut, Sparkles } from 'lucide-react';
+import { Bell, Printer, LogOut, GitBranch, ArrowLeftRight } from 'lucide-react';
 
 interface HeaderProps {
   isAdmin: boolean;
@@ -12,6 +12,8 @@ interface HeaderProps {
   onOpenLogin: () => void;
   onLogout: () => void;
   onPrint: () => void;
+  onOpenDataSync: () => void;
+  onOpenPortal: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -24,6 +26,8 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenLogin,
   onLogout,
   onPrint,
+  onOpenDataSync,
+  onOpenPortal,
 }) => {
   const navItems = [
     { id: 'dashboard' as const, label: 'لوحة التحكم' },
@@ -44,8 +48,12 @@ export const Header: React.FC<HeaderProps> = ({
             transition={{ duration: 0.4 }}
             className="flex items-center gap-3 shrink-0"
           >
-            <div className="w-10 h-10 bg-gradient-to-tr from-teal-700 via-teal-600 to-emerald-500 text-white rounded-2xl flex items-center justify-center shadow-md shadow-teal-700/20 border border-white/30">
-              <Shield className="w-5 h-5" />
+            <div className="h-11 px-2.5 bg-white rounded-2xl flex items-center justify-center shadow-xs border border-slate-200/80 shrink-0">
+              <img 
+                src="/assets/aistudio/logo_c05be10b.png" 
+                alt="وزارة التعليم" 
+                className="h-8 w-auto object-contain" 
+              />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -121,6 +129,21 @@ export const Header: React.FC<HeaderProps> = ({
               <span>طباعة التقرير</span>
             </motion.button>
 
+            {/* GitHub Sync & Backup Hub Button - Only for Student Counselor (admin) */}
+            {isAdmin && (
+              <motion.button
+                onClick={onOpenDataSync}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-slate-700 hover:text-teal-900 bg-white/60 hover:bg-white/90 backdrop-blur-md rounded-xl border border-white/70 shadow-xs transition-all text-xs font-bold cursor-pointer"
+                title="مركز مزامنة البيانات وتحديث مستودع GitHub"
+                aria-label="مزامنة GitHub والنسخ الاحتياطي"
+              >
+                <GitBranch className="w-4 h-4 text-teal-600" />
+                <span className="hidden lg:inline">مزامنة GitHub</span>
+              </motion.button>
+            )}
+
             {/* Notification Bell */}
             <motion.button
               onClick={onOpenNotifications}
@@ -136,8 +159,21 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </motion.button>
 
-            {/* User Role Badge / Switch */}
-            {isAdmin ? (
+            {/* Portal Switcher Button */}
+            <motion.button
+              onClick={onOpenPortal}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/80 rounded-xl transition-all text-xs font-bold cursor-pointer"
+              title="العودة لبوابة الدخول الرئيسية (اختيار زائر / موجه طلابي)"
+              aria-label="بوابة الدخول"
+            >
+              <ArrowLeftRight className="w-3.5 h-3.5 text-slate-500" />
+              <span className="hidden sm:inline">بوابة الدخول</span>
+            </motion.button>
+
+            {/* User Role Badge / Switch - Only for Counselor View */}
+            {isAdmin && (
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-2 px-3 py-1.5 bg-teal-500/10 backdrop-blur-md border border-teal-500/20 rounded-xl shadow-xs">
                   <div className="w-2 h-2 rounded-full bg-teal-600 animate-pulse"></div>
@@ -156,23 +192,12 @@ export const Header: React.FC<HeaderProps> = ({
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50/80 rounded-xl transition-colors cursor-pointer"
-                  title="تسجيل الخروج والعودة لوضع الزائر"
+                  title="تسجيل الخروج والعودة لبوابة الدخول"
                   aria-label="تسجيل الخروج"
                 >
                   <LogOut className="w-4 h-4" />
                 </motion.button>
               </div>
-            ) : (
-              <motion.button
-                onClick={onOpenLogin}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className="px-3.5 py-2 bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 shadow-sm active:scale-95 whitespace-nowrap cursor-pointer border border-white/10"
-              >
-                <LogIn className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">دخول الموجه الطلابي</span>
-                <span className="sm:hidden">دخول</span>
-              </motion.button>
             )}
           </motion.div>
 

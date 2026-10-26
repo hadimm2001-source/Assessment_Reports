@@ -19,6 +19,8 @@ import {
 } from './data/initialData';
 import { Indicator, DashboardSettings, NotificationItem } from './types';
 import { LoginModal } from './components/LoginModal';
+import { EntryPortal } from './components/EntryPortal';
+import { DataSyncModal } from './components/DataSyncModal';
 import { CheckCircle2, AlertCircle, Info } from 'lucide-react';
 
 export default function App() {
@@ -103,6 +105,14 @@ export default function App() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isNotificationDrawerOpen, setIsNotificationDrawerOpen] = useState(false);
+  const [isDataSyncOpen, setIsDataSyncOpen] = useState(false);
+  const [hasEnteredPortal, setHasEnteredPortal] = useState<boolean>(() => {
+    try {
+      return sessionStorage.getItem('entered_portal') === 'true';
+    } catch {
+      return false;
+    }
+  });
   const [uploadModalContext, setUploadModalContext] = useState<{
     indicatorId: string;
     programName: string;
@@ -172,10 +182,33 @@ export default function App() {
     return `${days[today.getDay()]}، ${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()} م`;
   })();
 
-  // Handlers for Authentication
+  // Handlers for Authentication & Entry Portal
+  const handleEnterAsVisitor = () => {
+    setIsAdmin(false);
+    localStorage.setItem('school_eval_is_admin', 'false');
+    sessionStorage.setItem('entered_portal', 'true');
+    setHasEnteredPortal(true);
+    showToast('أهلاً بك! تم الدخول في "وضع الزائر" للاطلاع على شواهد ومؤشرات التقويم المدرسي', 'info');
+  };
+
+  const handleEnterAsAdmin = () => {
+    setIsAdmin(true);
+    localStorage.setItem('school_eval_is_admin', 'true');
+    sessionStorage.setItem('entered_portal', 'true');
+    setHasEnteredPortal(true);
+    showToast('مرحباً بك يا أ. عبدالهادي المحسن (الموجه الطلابي)، تم تفعيل صلاحيات الإدارة الكاملة', 'success', true, 'دخول الموجه الطلابي');
+    confetti({
+      particleCount: 50,
+      spread: 70,
+      origin: { y: 0.8 },
+      colors: ['#0d9488', '#14b8a6', '#059669', '#38bdf8'],
+    });
+  };
+
   const handleLoginAsAdmin = () => {
     setIsAdmin(true);
     localStorage.setItem('school_eval_is_admin', 'true');
+    sessionStorage.setItem('entered_portal', 'true');
     setIsLoginModalOpen(false);
     showToast('مرحباً بك يا أ. عبدالهادي المحسن (الموجه الطلابي)، تم تفعيل صلاحيات الإدارة الكاملة', 'success', true, 'دخول الموجه الطلابي');
     confetti({
@@ -189,6 +222,7 @@ export default function App() {
   const handleLoginAsVisitor = () => {
     setIsAdmin(false);
     localStorage.setItem('school_eval_is_admin', 'false');
+    sessionStorage.setItem('entered_portal', 'true');
     setIsLoginModalOpen(false);
     showToast('أنت الآن تتصفح النظام في "وضع الزائر" للاطلاع على المؤشرات والشواهد', 'info');
   };
@@ -196,7 +230,9 @@ export default function App() {
   const handleLogout = () => {
     setIsAdmin(false);
     localStorage.setItem('school_eval_is_admin', 'false');
-    showToast('تم تسجيل الخروج والعودة لوضع الزائر', 'info');
+    sessionStorage.removeItem('entered_portal');
+    setHasEnteredPortal(false);
+    showToast('تم تسجيل الخروج والعودة لبوابة الدخول', 'info');
   };
 
   // Handlers for Reports management
@@ -261,6 +297,34 @@ export default function App() {
       }
     }
   };
+
+  if (!hasEnteredPortal) {
+    return (
+      <>
+        <EntryPortal
+          onEnterAsVisitor={handleEnterAsVisitor}
+          onEnterAsAdmin={handleEnterAsAdmin}
+        />
+        {/* Floating Instant Toast for portal */}
+        <AnimatePresence>
+          {toast && (
+            <motion.div 
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.95 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+              className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[150] px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-xs font-bold text-white bg-slate-900/90 backdrop-blur-xl border border-white/20"
+            >
+              {toast.type === 'success' && <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />}
+              {toast.type === 'error' && <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />}
+              {toast.type === 'info' && <Info className="w-4 h-4 text-teal-400 shrink-0" />}
+              <span>{toast.message}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50/80 text-slate-800 flex flex-col font-sans selection:bg-teal-500/20 selection:text-teal-900 relative overflow-x-hidden">
@@ -332,6 +396,8 @@ export default function App() {
         onOpenLogin={() => setIsLoginModalOpen(true)}
         onLogout={handleLogout}
         onPrint={handlePrintReport}
+        onOpenDataSync={() => setIsDataSyncOpen(true)}
+        onOpenPortal={() => setHasEnteredPortal(false)}
       />
 
       {/* Main Content Viewport */}
@@ -520,6 +586,17 @@ export default function App() {
         onClose={() => setIsLoginModalOpen(false)}
         onLoginAsAdmin={handleLoginAsAdmin}
         onLoginAsVisitor={handleLoginAsVisitor}
+      />
+
+      {/* GitHub Sync & Backup Hub Modal */}
+      <DataSyncModal
+        isOpen={isDataSyncOpen}
+        onClose={() => setIsDataSyncOpen(false)}
+        reports={reports}
+        onImportReports={(imported) => {
+          setReports(imported);
+          showToast('تم استيراد وحفظ كافة الشواهد والبرامج بنجاح!', 'success', true, 'مزامنة البيانات وتحديث الشواهد');
+        }}
       />
 
       {/* Floating Instant Toast */}
