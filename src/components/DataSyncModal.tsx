@@ -12,7 +12,8 @@ import {
   Database, 
   AlertTriangle, 
   CheckCircle2, 
-  Sparkles 
+  Sparkles,
+  RefreshCw
 } from 'lucide-react';
 
 interface DataSyncModalProps {
@@ -20,6 +21,7 @@ interface DataSyncModalProps {
   onClose: () => void;
   reports: Record<string, string>;
   onImportReports: (imported: Record<string, string>) => void;
+  onResetToDefaults?: () => void;
 }
 
 export const DataSyncModal: React.FC<DataSyncModalProps> = ({
@@ -27,6 +29,7 @@ export const DataSyncModal: React.FC<DataSyncModalProps> = ({
   onClose,
   reports,
   onImportReports,
+  onResetToDefaults,
 }) => {
   const [copied, setCopied] = useState(false);
   const [importText, setImportText] = useState('');
@@ -156,6 +159,30 @@ export const DataSyncModal: React.FC<DataSyncModalProps> = ({
             </p>
           </div>
         </div>
+
+        {/* Instant SharePoint Links Sync Banner */}
+        {onResetToDefaults && (
+          <div className="mb-5 p-4 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/80 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+            <div className="text-right">
+              <div className="text-xs font-black text-emerald-950 flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>تحديث وتطبيق روابط SharePoint الجديدة فوراً</span>
+              </div>
+              <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">
+                إذا كان متصفحك أو متصفح الزوار يعرض روابط قديمة محفوظة سابقاً في الذاكرة المؤقتة، اضغط هنا لمزامنة كافة البرامج الـ 27 بأحدث الروابط الرسمية المعتمدة فوراً.
+              </p>
+            </div>
+            <motion.button
+              onClick={() => onResetToDefaults()}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="shrink-0 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>تحديث الروابط الآن</span>
+            </motion.button>
+          </div>
+        )}
 
         {/* Navigation Tabs */}
         <div className="flex items-center gap-2 p-1 bg-slate-100 rounded-2xl mb-6 text-xs font-bold text-slate-600">

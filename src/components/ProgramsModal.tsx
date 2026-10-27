@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Indicator } from '../types';
-import { X, ExternalLink, Link2, Trash2, Sparkles, CheckCircle2, FileText } from 'lucide-react';
+import { X, ExternalLink, Link2, Trash2, Sparkles, CheckCircle2, FileText, RefreshCw } from 'lucide-react';
 
 interface ProgramsModalProps {
   indicator: Indicator | null;
@@ -11,6 +11,7 @@ interface ProgramsModalProps {
   onOpenUpload: (indicatorId: string, programName: string) => void;
   onDeleteReport: (indicatorId: string, programName: string) => void;
   onOpenAdvisor: (programName: string, indicatorTitle: string) => void;
+  onResetToDefaults?: () => void;
 }
 
 export const ProgramsModal: React.FC<ProgramsModalProps> = ({
@@ -21,6 +22,7 @@ export const ProgramsModal: React.FC<ProgramsModalProps> = ({
   onOpenUpload,
   onDeleteReport,
   onOpenAdvisor,
+  onResetToDefaults,
 }) => {
   if (!indicator) return null;
 
@@ -65,6 +67,19 @@ export const ProgramsModal: React.FC<ProgramsModalProps> = ({
               }`}>
                 الإنجاز: {currentProgress}% ({completedCount} من {indicator.programs.length} شواهد)
               </span>
+
+              {isAdmin && onResetToDefaults && (
+                <motion.button
+                  onClick={onResetToDefaults}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg transition-colors cursor-pointer"
+                  title="تحديث ومزامنة كافة الشواهد مع أحدث روابط SharePoint المعتمدة"
+                >
+                  <RefreshCw className="w-3 h-3 text-emerald-600" />
+                  <span>تحديث للروابط المعتمدة</span>
+                </motion.button>
+              )}
             </div>
             <h2 className="text-xl font-black text-slate-900 leading-snug">
               {indicator.indicator}

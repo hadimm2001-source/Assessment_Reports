@@ -33,16 +33,36 @@ export default function App() {
     }
   });
 
+  const CURRENT_REPORTS_VERSION = 'v2_sharepoint_official';
+
   const [reports, setReports] = useState<Record<string, string>>(() => {
     try {
-      const saved = localStorage.getItem('reports_v1');
-      if (saved) {
-        return JSON.parse(saved);
+      const storedVersion = localStorage.getItem('reports_version');
+      const savedV2 = localStorage.getItem('reports_v2');
+
+      // If version is already current and we have saved reports
+      if (storedVersion === CURRENT_REPORTS_VERSION && savedV2) {
+        const parsed = JSON.parse(savedV2);
+        // Merge with PRE_SAVED_REPORTS to guarantee all updated SharePoint links are always loaded
+        const merged: Record<string, string> = { ...PRE_SAVED_REPORTS };
+        // Retain any user-entered custom link if it's not a legacy mock link
+        Object.keys(parsed).forEach(key => {
+          if (parsed[key] && !parsed[key].includes('example.com') && !parsed[key].includes('moe.gov.sa/reports')) {
+            merged[key] = parsed[key];
+          }
+        });
+        return merged;
       }
+
+      // Legacy migration: clear outdated reports_v1 and immediately initialize with official SharePoint links
+      localStorage.removeItem('reports_v1');
+      localStorage.setItem('reports_version', CURRENT_REPORTS_VERSION);
+      localStorage.setItem('reports_v2', JSON.stringify(PRE_SAVED_REPORTS));
+      return PRE_SAVED_REPORTS;
     } catch (e) {
       console.warn('Error reading reports from localStorage', e);
+      return PRE_SAVED_REPORTS;
     }
-    return PRE_SAVED_REPORTS;
   });
 
   const [settings, setSettings] = useState<DashboardSettings>(() => {
@@ -133,7 +153,8 @@ export default function App() {
   // Save reports to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem('reports_v1', JSON.stringify(reports));
+      localStorage.setItem('reports_version', CURRENT_REPORTS_VERSION);
+      localStorage.setItem('reports_v2', JSON.stringify(reports));
     } catch {}
   }, [reports]);
 
@@ -258,6 +279,20 @@ export default function App() {
       return next;
     });
     showToast(`تم حذف رابط الشاهد لبرنامج: ${programName}`, 'info', true, 'حذف رابط الشاهد');
+  };
+
+  const handleResetToDefaultReports = () => {
+    setReports(PRE_SAVED_REPORTS);
+    try {
+      localStorage.setItem('reports_version', CURRENT_REPORTS_VERSION);
+      localStorage.setItem('reports_v2', JSON.stringify(PRE_SAVED_REPORTS));
+    } catch {}
+    showToast(
+      'تم تحديث كافة روابط الشواهد والتقارير (27 برنامجاً) إلى روابط SharePoint الجديدة بنجاح!',
+      'success',
+      true,
+      'تحديث ومزامنة الروابط المعتمدة'
+    );
   };
 
   const handleSaveSettings = (newSettings: DashboardSettings) => {
@@ -533,6 +568,7 @@ export default function App() {
           });
         }}
         onDeleteReport={handleDeleteReport}
+        onResetToDefaults={handleResetToDefaultReports}
         onOpenAdvisor={(progName, indTitle) => {
           setAdvisorModalContext({
             programName: progName,
@@ -597,6 +633,7 @@ export default function App() {
           setReports(imported);
           showToast('تم استيراد وحفظ كافة الشواهد والبرامج بنجاح!', 'success', true, 'مزامنة البيانات وتحديث الشواهد');
         }}
+        onResetToDefaults={handleResetToDefaultReports}
       />
 
       {/* Floating Instant Toast */}
