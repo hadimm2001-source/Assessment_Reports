@@ -48,14 +48,14 @@ export const Header: React.FC<HeaderProps> = ({
             transition={{ duration: 0.4 }}
             className="flex items-center gap-3 shrink-0"
           >
-<div className="h-11 px-2.5 bg-white rounded-2xl flex items-center justify-center shadow-xs border border-slate-200/80 shrink-0">
-  <img
-    src="/Assessment_Reports/moe_logo.png"
-    alt="وزارة التعليم"
-    className="h-8 w-auto object-contain"
-  />
-</div>
+            <div className="h-11 px-2.5 bg-white rounded-2xl flex items-center justify-center shadow-xs border border-slate-200/80 shrink-0">
+              <img
+                src="/Assessment_Reports/moe_logo.png"
+                alt="وزارة التعليم"
+                className="h-8 w-auto object-contain"
+              />
             </div>
+            
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-base font-black text-slate-900 tracking-tight whitespace-nowrap">
