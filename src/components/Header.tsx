@@ -1,8 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Bell, Printer, LogOut, GitBranch, ArrowLeftRight } from 'lucide-react';
-// استيراد مسار الصورة مباشرة عبر Vite
-import logoUrl from '/moe_logo.png';
 
 interface HeaderProps {
   isAdmin: boolean;
@@ -51,9 +49,8 @@ export const Header: React.FC<HeaderProps> = ({
             className="flex items-center gap-3 shrink-0"
           >
             <div className="h-11 px-2.5 bg-white rounded-2xl flex items-center justify-center shadow-xs border border-slate-200/80 shrink-0">
-              {/* استخدام المتغير المستورد للصورة */}
               <img
-                src={logoUrl}
+                src="/Assessment_Reports/moe_logo.png"
                 alt="وزارة التعليم"
                 className="h-8 w-auto object-contain"
               />
@@ -208,4 +205,23 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Mobile Navigation Row */}
-        <div className="flex md:hidden items-center justify-between gap-1 py-2 border-t
+        <div className="flex md:hidden items-center justify-between gap-1 py-2 border-t border-slate-200/40 overflow-x-auto scrollbar-none text-xs font-bold">
+          {navItems.map(item => (
+            <button
+              key={item.id}
+              onClick={() => onNavChange(item.id)}
+              className={`px-3 py-1.5 rounded-xl whitespace-nowrap transition-all ${
+                activeNav === item.id 
+                  ? 'bg-slate-900 text-white shadow-xs' 
+                  : 'text-slate-600 hover:bg-white/60'
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+
+      </div>
+    </header>
+  );
+};
