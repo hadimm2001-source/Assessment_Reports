@@ -1,6 +1,9 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Bell, Printer, LogOut, GitBranch, ArrowLeftRight } from 'lucide-react';
+// إضافة استيراد الصورة هنا - تأكد من المسار الصحيح للصورة بالنسبة لملف Header.tsx
+// بناءً على بنية المجلدات الافتراضية، إذا كانت الصورة في مجلد public:
+import logoUrl from '/moe_logo.png';
 
 interface HeaderProps {
   isAdmin: boolean;
@@ -49,8 +52,9 @@ export const Header: React.FC<HeaderProps> = ({
             className="flex items-center gap-3 shrink-0"
           >
             <div className="h-11 px-2.5 bg-white rounded-2xl flex items-center justify-center shadow-xs border border-slate-200/80 shrink-0">
+              {/* استخدام المتغير المستورد هنا */}
               <img
-                src="/Assessment_Reports/moe_logo.png"
+                src={logoUrl}
                 alt="وزارة التعليم"
                 className="h-8 w-auto object-contain"
               />
