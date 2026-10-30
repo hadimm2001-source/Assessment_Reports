@@ -103,16 +103,15 @@ export const EntryPortal: React.FC<EntryPortalProps> = ({
       {/* Top Ministry & School Branding Header */}
       <header className="relative z-10 w-full max-w-7xl mx-auto px-6 py-6 sm:py-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-white/10">
         <div className="flex items-center">
-          <div className="bg-white/95 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/80 shadow-md flex items-center justify-center">
+          <div className="flex items-center justify-center">
             <img 
-              src={ministryLogo} 
+              src="https://cdn.jsdelivr.net/gh/hadimm2001-source/Assessment_Reports@main/public/moe_logo.png" 
               alt="شعار وزارة التعليم - المملكة العربية السعودية" 
-              className="h-10 sm:h-12 w-auto object-contain drop-shadow-xs"
+              className="h-12 sm:h-14 w-auto object-contain drop-shadow-[0_2px_12px_rgba(20,184,166,0.3)]"
               onError={(e) => {
                 const target = e.currentTarget;
-                const fallbackUrl = `${import.meta.env.BASE_URL}assets/aistudio/logo_c05be10b.png`;
-                if (target.src !== fallbackUrl) {
-                  target.src = fallbackUrl;
+                if (target.src !== ministryLogo) {
+                  target.src = ministryLogo;
                 }
               }}
             />

@@ -89,14 +89,13 @@ export const PrintReportView: React.FC<PrintReportViewProps> = ({
           <div className="text-center">
             <div className="h-16 flex items-center justify-center p-1 mx-auto mb-1">
               <img 
-                src={ministryLogo} 
+                src="https://cdn.jsdelivr.net/gh/hadimm2001-source/Assessment_Reports@main/public/moe_logo.png" 
                 alt="شعار وزارة التعليم" 
                 className="h-14 w-auto object-contain"
                 onError={(e) => {
                   const target = e.currentTarget;
-                  const fallbackUrl = `${import.meta.env.BASE_URL}assets/aistudio/logo_c05be10b.png`;
-                  if (target.src !== fallbackUrl) {
-                    target.src = fallbackUrl;
+                  if (target.src !== ministryLogo) {
+                    target.src = ministryLogo;
                   }
                 }}
               />

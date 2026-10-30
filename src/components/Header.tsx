@@ -48,12 +48,19 @@ export const Header: React.FC<HeaderProps> = ({
             transition={{ duration: 0.4 }}
             className="flex items-center gap-3 shrink-0"
           >
-            <div className="h-11 px-2.5 bg-white rounded-2xl flex items-center justify-center shadow-xs border border-slate-200/80 shrink-0">
-              {/* الرابط المباشر من مستودعك عبر شبكة CDN السريعة */}
+            <div className="flex items-center justify-center shrink-0">
+              {/* الرابط المباشر من مستودعك عبر شبكة CDN السريعة مفرغ PNG بدون خلفية بيضاء */}
               <img
                 src="https://cdn.jsdelivr.net/gh/hadimm2001-source/Assessment_Reports@main/public/moe_logo.png"
                 alt="وزارة التعليم"
-                className="h-8 w-auto object-contain"
+                className="h-10 w-auto object-contain"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  const fallback = `${import.meta.env.BASE_URL}assets/aistudio/logo_c05be10b.png`;
+                  if (target.src !== fallback) {
+                    target.src = fallback;
+                  }
+                }}
               />
             </div>
             
