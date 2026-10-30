@@ -1,8 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Bell, Printer, LogOut, GitBranch, ArrowLeftRight } from 'lucide-react';
-// استيراد الصورة بشكل صحيح من مجلد assets
-import logoUrl from '../assets/moe_logo.png';
 
 interface HeaderProps {
   isAdmin: boolean;
@@ -51,9 +49,9 @@ export const Header: React.FC<HeaderProps> = ({
             className="flex items-center gap-3 shrink-0"
           >
             <div className="h-11 px-2.5 bg-white rounded-2xl flex items-center justify-center shadow-xs border border-slate-200/80 shrink-0">
-              {/* استخدام متغير الصورة المستوردة هنا */}
+              {/* الرابط المباشر من مستودعك عبر شبكة CDN السريعة */}
               <img
-                src={logoUrl}
+                src="https://cdn.jsdelivr.net/gh/hadimm2001-source/Assessment_Reports@main/public/moe_logo.png"
                 alt="وزارة التعليم"
                 className="h-8 w-auto object-contain"
               />
