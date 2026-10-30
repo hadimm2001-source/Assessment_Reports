@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Indicator, DashboardSettings } from '../types';
 import { Printer, CheckCircle2, Award, Calendar, FileText, ArrowRight } from 'lucide-react';
+import ministryLogo from '../assets/logo.png';
 
 interface PrintReportViewProps {
   indicators: Indicator[];
@@ -86,8 +87,19 @@ export const PrintReportView: React.FC<PrintReportViewProps> = ({
           </div>
 
           <div className="text-center">
-            <div className="w-16 h-16 border-2 border-teal-800 rounded-full flex flex-col items-center justify-center p-2 mx-auto mb-1 text-teal-900">
-              <Award className="w-7 h-7 text-teal-800" />
+            <div className="h-16 flex items-center justify-center p-1 mx-auto mb-1">
+              <img 
+                src={ministryLogo} 
+                alt="شعار وزارة التعليم" 
+                className="h-14 w-auto object-contain"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  const fallbackUrl = `${import.meta.env.BASE_URL}assets/aistudio/logo_c05be10b.png`;
+                  if (target.src !== fallbackUrl) {
+                    target.src = fallbackUrl;
+                  }
+                }}
+              />
             </div>
             <span className="text-[11px] font-bold text-slate-600 block">التقويم والاعتماد المدرسي</span>
           </div>

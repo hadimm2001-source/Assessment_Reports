@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import ministryLogo from '../assets/logo.png';
 import { 
   ShieldCheck, 
   Eye, 
@@ -104,9 +105,16 @@ export const EntryPortal: React.FC<EntryPortalProps> = ({
         <div className="flex items-center">
           <div className="bg-white/95 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/80 shadow-md flex items-center justify-center">
             <img 
-              src="/assets/aistudio/logo_c05be10b.png" 
+              src={ministryLogo} 
               alt="شعار وزارة التعليم - المملكة العربية السعودية" 
-              className="h-10 sm:h-12 w-auto object-contain"
+              className="h-10 sm:h-12 w-auto object-contain drop-shadow-xs"
+              onError={(e) => {
+                const target = e.currentTarget;
+                const fallbackUrl = `${import.meta.env.BASE_URL}assets/aistudio/logo_c05be10b.png`;
+                if (target.src !== fallbackUrl) {
+                  target.src = fallbackUrl;
+                }
+              }}
             />
           </div>
         </div>
